@@ -17,34 +17,34 @@ public class PaintItemController : ControllerBase
     }
 
     [HttpGet("/AllPaints")]
-    public PaintItem[] GetAll()
+    public async Task<PaintItem[]> GetAll()
     {
-        Task<PaintItem[]> paints = DbContext.GetAllPaints();
+        PaintItem[] paints = DbContext.GetAllPaints();
         if (paints == null)
         {
             Response.StatusCode = 404;
             return null;
         }
         Response.StatusCode = 200;
-        return paints.Result.ToArray();
+        return paints;
 
     }
 
     [HttpGet("{id}")]
-    public PaintItem GetSpecificPaint(long id)
+    public async Task<PaintItem> GetSpecificPaint(long id)
     {
 
-        Task<PaintItem> paintFound = DbContext.GetPaintItemById(id);
+        PaintItem paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
         }
 
         Response.StatusCode = 200;
-        return paintFound.Result;
+        return paintFound;
     }
     [HttpPost()]
-    public void Post(string name, string hexCode, string brand)
+    public async void Post(string name, string hexCode, string brand)
     {
         Console.WriteLine($"Post Received: {name} - {hexCode}");
 
@@ -57,10 +57,10 @@ public class PaintItemController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public void Put(long id, string name, string hexCode, string brand)
+    public async void Put(long id, string name, string hexCode, string brand)
     {
 
-        PaintItem paintFound = DbContext.GetPaintItemById(id).Result;
+        PaintItem paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -74,17 +74,17 @@ public class PaintItemController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public HttpResponseMessage Delete(long id)
+    public async void Delete(long id)
     {
 
-        PaintItem? paintFound = DbContext.GetPaintItemById(id).Result;
+        PaintItem? paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
-            return new HttpResponseMessage(HttpStatusCode.NotAcceptable);
+            Response.StatusCode = 404;
         }
 
         DbContext.DeletePaint(paintFound);
-        return new HttpResponseMessage(HttpStatusCode.OK);
+        Response.StatusCode = 200;
 
     }
 }
