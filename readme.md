@@ -4,7 +4,7 @@
 [X] Ajout d'une classe static Utilitaire
 [X] Model Code First
 
-[] Async Operations
+[X] Async Operations
 [] Service Pattern
 
 [] Front-end MAUI

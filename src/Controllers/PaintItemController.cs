@@ -19,14 +19,14 @@ public class PaintItemController : ControllerBase
     [HttpGet("/AllPaints")]
     public PaintItem[] GetAll()
     {
-        var paints = DbContext.GetAllPaints();
+        Task<PaintItem[]> paints = DbContext.GetAllPaints();
         if (paints == null)
         {
             Response.StatusCode = 404;
-            return new PaintItem[0];
+            return null;
         }
         Response.StatusCode = 200;
-        return paints;
+        return paints.Result.ToArray();
 
     }
 
@@ -34,14 +34,14 @@ public class PaintItemController : ControllerBase
     public PaintItem GetSpecificPaint(long id)
     {
 
-        PaintItem paintFound = DbContext.GetPaintItemById(id);
+        Task<PaintItem> paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
         }
 
         Response.StatusCode = 200;
-        return paintFound;
+        return paintFound.Result;
     }
     [HttpPost()]
     public void Post(string name, string hexCode, string brand)
@@ -60,7 +60,7 @@ public class PaintItemController : ControllerBase
     public void Put(long id, string name, string hexCode, string brand)
     {
 
-        PaintItem paintFound = DbContext.GetPaintItemById(id);
+        PaintItem paintFound = DbContext.GetPaintItemById(id).Result;
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -77,7 +77,7 @@ public class PaintItemController : ControllerBase
     public HttpResponseMessage Delete(long id)
     {
 
-        PaintItem? paintFound = DbContext.GetPaintItemById(id);
+        PaintItem? paintFound = DbContext.GetPaintItemById(id).Result;
         if (paintFound == null)
         {
             return new HttpResponseMessage(HttpStatusCode.NotAcceptable);
