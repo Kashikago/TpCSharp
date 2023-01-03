@@ -3,6 +3,7 @@ using MinisAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using MinisAPI.Models;
 using MinisAPI.Context;
+using MinisAPI.Service;
 namespace MinisAPI.Controllers;
 [ApiController]
 [Route("[controller]")]
@@ -18,7 +19,7 @@ public class PaintItemController : ControllerBase
     [HttpGet("/AllPaints")]
     public PaintItem[] GetAll()
     {
-        var paints = DbContext?.PaintItems.ToArray();
+        var paints = DbContext.GetAllPaints();
         if (paints == null)
         {
             Response.StatusCode = 404;
@@ -33,7 +34,7 @@ public class PaintItemController : ControllerBase
     public PaintItem GetSpecificPaint(long id)
     {
 
-        PaintItem paintFound = DbContext?.PaintItems.Find(id);
+        PaintItem paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -52,17 +53,14 @@ public class PaintItemController : ControllerBase
             Response.StatusCode = 406;
         }
 
-        PaintItem newPaintItem = new PaintItem(name, hexCode, brand);
-        DbContext?.PaintItems.Add(newPaintItem);
-        DbContext?.SaveChanges();
-
+        DbContext.CreateNewPaint(name, hexCode, brand);
     }
 
     [HttpPut("{id:int}")]
-    public void Put(long id, string name, string hexCode)
+    public void Put(long id, string name, string hexCode, string brand)
     {
 
-        PaintItem paintFound = DbContext.PaintItems.Find(id);
+        PaintItem paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -71,9 +69,7 @@ public class PaintItemController : ControllerBase
         {
             Response.StatusCode = 406;
         }
-        paintFound.Name = name;
-        paintFound.HexCode = hexCode;
-        DbContext.SaveChanges();
+        DbContext.ModifyPaint(paintFound, name, hexCode, brand);
         Response.StatusCode = 200;
     }
 
@@ -81,14 +77,13 @@ public class PaintItemController : ControllerBase
     public HttpResponseMessage Delete(long id)
     {
 
-        PaintItem? paintFound = DbContext.PaintItems.ToList().Find(elem => elem.Id == id);
+        PaintItem? paintFound = DbContext.GetPaintItemById(id);
         if (paintFound == null)
         {
             return new HttpResponseMessage(HttpStatusCode.NotAcceptable);
         }
 
-        DbContext.PaintItems.Remove(paintFound);
-        DbContext.SaveChanges();
+        DbContext.DeletePaint(paintFound);
         return new HttpResponseMessage(HttpStatusCode.OK);
 
     }

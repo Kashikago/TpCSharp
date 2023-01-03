@@ -1,6 +1,5 @@
 using MinisAPI.Context;
 using Microsoft.EntityFrameworkCore;
-using TpCSharp.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

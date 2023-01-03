@@ -3,6 +3,7 @@
 [X] Connection de la DB Postgre via Dependency Injection
 [X] Ajout d'une classe static Utilitaire
 [X] Model Code First
+
 [] Async Operations
 [] Service Pattern
 
