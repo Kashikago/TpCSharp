@@ -2,7 +2,7 @@
 [X] CRUD pour les peintures
 [X] Connection de la DB Postgre via Dependency Injection
 [X] Ajout d'une classe static Utilitaire
-[] Model Code First
+[X] Model Code First
 [] Async Operations
 [] Service Pattern
 

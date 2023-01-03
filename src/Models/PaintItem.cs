@@ -14,4 +14,5 @@ public class PaintItem
     public string? Name { get; set; }
     public string? HexCode { get; set; }
     public string? Brand { get; set; }
+    public List<int> Ratings { get; set; } = new List<int>();
 }

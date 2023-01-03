@@ -11,13 +11,19 @@ public class PaintItemController : ControllerBase
     private readonly MinisDbContext DbContext;
     public PaintItemController(MinisDbContext dbContext)
     {
-        DbContext = dbContext;
+        if (dbContext != null)
+            DbContext = dbContext;
     }
 
     [HttpGet("/AllPaints")]
     public PaintItem[] GetAll()
     {
-        var paints = DbContext.PaintItems.ToArray();
+        var paints = DbContext?.PaintItems.ToArray();
+        if (paints == null)
+        {
+            Response.StatusCode = 404;
+            return new PaintItem[0];
+        }
         Response.StatusCode = 200;
         return paints;
 
@@ -27,7 +33,7 @@ public class PaintItemController : ControllerBase
     public PaintItem GetSpecificPaint(long id)
     {
 
-        PaintItem paintFound = DbContext.PaintItems.Find(id);
+        PaintItem paintFound = DbContext?.PaintItems.Find(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -47,8 +53,8 @@ public class PaintItemController : ControllerBase
         }
 
         PaintItem newPaintItem = new PaintItem(name, hexCode, brand);
-        DbContext.PaintItems.Add(newPaintItem);
-        DbContext.SaveChanges();
+        DbContext?.PaintItems.Add(newPaintItem);
+        DbContext?.SaveChanges();
 
     }
 
@@ -65,13 +71,10 @@ public class PaintItemController : ControllerBase
         {
             Response.StatusCode = 406;
         }
-
         paintFound.Name = name;
         paintFound.HexCode = hexCode;
         DbContext.SaveChanges();
         Response.StatusCode = 200;
-
-
     }
 
     [HttpDelete("{id:int}")]
