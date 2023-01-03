@@ -1,5 +1,5 @@
 using MinisAPI.Context;
-
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,7 +8,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<MinisDbContext>();
+builder.Services.AddDbContext<MinisDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbAuth"));
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
