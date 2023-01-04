@@ -1,6 +1,8 @@
 using MinisAPI.Context;
+using MinisAPI.Models;
+using MinisAPI.Models.DTO;
 using Microsoft.EntityFrameworkCore;
-
+using AutoMapper;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
@@ -12,6 +14,7 @@ builder.Services.AddDbContext<MinisDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DbAuth"));
 });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

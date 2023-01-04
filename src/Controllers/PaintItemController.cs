@@ -1,23 +1,28 @@
-using System.Net;
 using MinisAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using MinisAPI.Models;
+using MinisAPI.Models.DTO;
 using MinisAPI.Context;
 using MinisAPI.Service;
+using AutoMapper;
 namespace MinisAPI.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class PaintItemController : ControllerBase
 {
     private readonly MinisDbContext DbContext;
-    public PaintItemController(MinisDbContext dbContext)
+    private readonly IMapper _Mapper;
+    public PaintItemController(MinisDbContext dbContext, IMapper mapper)
     {
+
         if (dbContext != null)
             DbContext = dbContext;
+        if (mapper != null)
+            _Mapper = mapper;
     }
 
     [HttpGet("/AllPaints")]
-    public async Task<PaintItem[]> GetAll()
+    public async Task<IEnumerable<PaintItemDTO>> GetAll()
     {
         PaintItem[] paints = await DbContext.GetAllPaintsAsync();
         if (paints == null)
@@ -26,14 +31,13 @@ public class PaintItemController : ControllerBase
             return null;
         }
         Response.StatusCode = 200;
-        return paints;
+        return _Mapper.Map<IEnumerable<PaintItemDTO>>(paints);
 
     }
 
     [HttpGet("{id}")]
-    public async Task<PaintItem> GetSpecificPaint(long id)
+    public async Task<PaintItemDTO> GetSpecificPaint(long id)
     {
-
         var paintFound = await DbContext.GetPaintItemByIdAsync(id);
         if (paintFound == null)
         {
@@ -41,7 +45,8 @@ public class PaintItemController : ControllerBase
         }
 
         Response.StatusCode = 200;
-        return paintFound;
+
+        return _Mapper.Map<PaintItemDTO>(paintFound);
     }
     [HttpPost()]
     public async void Post(string name, string hexCode, string brand)

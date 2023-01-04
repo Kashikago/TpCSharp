@@ -6,7 +6,7 @@
 
 [X] Async Operations for Controller
 [X] Service Pattern
-[] DTO Data Transfert Object
+[X] DTO Data Transfert Object
 
 [] Front-end MAUI
 []App web C#

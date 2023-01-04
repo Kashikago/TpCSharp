@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 namespace MinisAPI.Models;
 
 public class PaintItem
