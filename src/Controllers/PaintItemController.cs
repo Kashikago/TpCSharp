@@ -19,7 +19,7 @@ public class PaintItemController : ControllerBase
     [HttpGet("/AllPaints")]
     public async Task<PaintItem[]> GetAll()
     {
-        PaintItem[] paints = DbContext.GetAllPaints();
+        PaintItem[] paints = await DbContext.GetAllPaintsAsync();
         if (paints == null)
         {
             Response.StatusCode = 404;
@@ -34,7 +34,7 @@ public class PaintItemController : ControllerBase
     public async Task<PaintItem> GetSpecificPaint(long id)
     {
 
-        PaintItem paintFound = DbContext.GetPaintItemById(id);
+        var paintFound = await DbContext.GetPaintItemByIdAsync(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -53,14 +53,14 @@ public class PaintItemController : ControllerBase
             Response.StatusCode = 406;
         }
 
-        DbContext.CreateNewPaint(name, hexCode, brand);
+        DbContext.CreateNewPaintAsync(name, hexCode, brand);
     }
 
     [HttpPut("{id:int}")]
     public async void Put(long id, string name, string hexCode, string brand)
     {
 
-        PaintItem paintFound = DbContext.GetPaintItemById(id);
+        PaintItem paintFound = await DbContext.GetPaintItemByIdAsync(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
@@ -69,7 +69,7 @@ public class PaintItemController : ControllerBase
         {
             Response.StatusCode = 406;
         }
-        DbContext.ModifyPaint(paintFound, name, hexCode, brand);
+        DbContext.ModifyPaintAsync(paintFound, name, hexCode, brand);
         Response.StatusCode = 200;
     }
 
@@ -77,13 +77,13 @@ public class PaintItemController : ControllerBase
     public async void Delete(long id)
     {
 
-        PaintItem? paintFound = DbContext.GetPaintItemById(id);
+        PaintItem? paintFound = await DbContext.GetPaintItemByIdAsync(id);
         if (paintFound == null)
         {
             Response.StatusCode = 404;
         }
 
-        DbContext.DeletePaint(paintFound);
+        DbContext.DeletePaintAsync(paintFound);
         Response.StatusCode = 200;
 
     }
