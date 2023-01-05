@@ -8,5 +8,8 @@
 [X] Service Pattern
 [X] DTO Data Transfert Object
 
+[X] Docker
+[] Auth SSO
+
 [] Front-end MAUI
 []App web C#
